@@ -1,0 +1,103 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <title>Calculadora de Divisão de Conta</title>
+  <style>
+    body{
+        font-family: Arial, sans-serif;
+        background: linear-gradient(-135deg,#ffa100,#ffbc00);
+    }
+    a{
+        color: black;
+       }
+    .container {
+      width: 400px;
+      margin: 0 auto;
+      padding: 20px;
+      border: 1px solid #ccc;
+    }
+
+    label {
+      display: block;
+      margin-bottom: 5px;
+    }
+
+    input[type="text"] {
+      width: 100%;
+      padding: 5px;
+      margin-bottom: 10px;
+    }
+
+    button {
+      display: block;
+      width: 100%;
+      padding: 10px;
+      background-color: black;
+      color: #fff;
+      border: none;
+      cursor: pointer;
+    }
+
+    #results {
+      margin-top: 20px;
+      padding: 10px;
+      background-color: #f2f2f2;
+      border: 1px solid #ccc;
+    }
+
+    #results p {
+      margin: 0;
+      padding: 5px 0;
+    }
+  </style>
+</head>
+<body>
+    <div class="menu">
+        <a href="index.html">Conversor</a>
+          <a href="jogoVida.html">Jogo da Vida</a>
+          </div> 
+  <div class="container">
+    <h2>Calculadora de Divisão de Conta</h2>
+
+    <label for="total">Total da Conta:</label>
+    <input type="text" id="total" placeholder="Informe o valor total">
+
+    <label for="clients">Número de Clientes:</label>
+    <input type="text" id="clients" placeholder="Informe o número de clientes">
+
+    <button onclick="calculate()">Calcular</button>
+
+    <div id="results"></div>
+  </div>
+
+  <script>
+    function calculate() {
+        var total = parseFloat(document.getElementById('total').value);
+        var numClients = parseInt(document.getElementById('clients').value);
+      
+        if (isNaN(total) || isNaN(numClients)) {
+          alert('Por favor, insira valores válidos!');
+          return;
+        }
+      
+        var individualTotal = total / numClients;
+        var serviceCharge = (individualTotal * 10) / 100;
+        var finalTotal = individualTotal + serviceCharge;
+      
+        var resultsDiv = document.getElementById('results');
+        resultsDiv.innerHTML = '';
+      
+        for (var i = 1; i <= numClients; i++) {
+          var clientTotal = i === numClients ? total - (individualTotal * (numClients - 1)) : individualTotal;
+          var clientServiceCharge = (clientTotal * 10) / 100;
+          var clientFinalTotal = clientTotal + clientServiceCharge;
+      
+          var result = document.createElement('p');
+          result.innerHTML = 'Cliente ' + i + ': Total a pagar = R$ ' + clientTotal.toFixed(2) + ' | Taxa de serviço (10%) = R$ ' + clientServiceCharge.toFixed(2) + ' | Total com taxa = R$ ' + clientFinalTotal.toFixed(2);
+          resultsDiv.appendChild(result);
+        }
+      }
+      
+  </script>
+</body>
+</html>

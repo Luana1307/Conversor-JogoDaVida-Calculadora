@@ -1,0 +1,156 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <title>Conversor de Números Romanos</title>
+  <style>
+    body {
+      font-family: Arial, sans-serif;
+      background: linear-gradient(-135deg,#ffa100,#ffbc00);
+    }
+    a{
+     color: black;
+    }
+    .container {
+      width: 400px;
+      margin: 0 auto;
+      padding: 20px;
+      border: 1px solid #ccc;
+    }
+
+    label {
+      display: block;
+      margin-bottom: 5px;
+    }
+
+    input[type="text"] {
+      width: 100%;
+      padding: 5px;
+      margin-bottom: 10px;
+    }
+
+    button {
+      display: block;
+      width: 100%;
+      padding: 10px;
+      background-color: black;
+      color: #fff;
+      border: none;
+      cursor: pointer;
+    }
+
+    #result {
+      margin-top: 20px;
+      padding: 10px;
+      background-color: #f2f2f2;
+      border: 1px solid #ccc;
+      font-weight: bold;
+    }
+  </style>
+</head>
+<body>
+  <div class="menu">
+    <a href="jogoVida.html">Jogo da Vida</a>
+      <a href="calculadora.html">Calculadora</a>
+      </div>
+  <div class="container">
+    <h2>Conversor de Números Romanos</h2>
+
+    <label for="inputNumber">Número:</label>
+    <input type="text" id="inputNumber" placeholder="Digite um número romano ou arábico">
+
+    <button onclick="convert()">Converter</button>
+
+    <div id="result"></div>
+  </div>
+
+  <script>
+    function convert() {
+      var input = document.getElementById('inputNumber').value;
+      var resultDiv = document.getElementById('result');
+      resultDiv.innerHTML = '';
+    
+      if (isRomanNumber(input)) {
+        var arabicNumber = romanToArabic(input);
+        resultDiv.innerHTML = 'Número Arábico: ' + arabicNumber;
+      } else if (isArabicNumber(input)) {
+        var romanNumber = arabicToRoman(input);
+        resultDiv.innerHTML = 'Número Romano: ' + romanNumber;
+      } else {
+        resultDiv.innerHTML = 'Número inválido!';
+      }
+    }
+    
+    function isRomanNumber(number) {
+      var romanRegex = /^(M{0,3})(CM|CD|D?C{0,3})(XC|XL|L?X{0,3})(IX|IV|V?I{0,3})$/;
+      return romanRegex.test(number);
+    }
+    
+    function isArabicNumber(number) {
+      var arabicRegex = /^[1-9]\d{0,3}$/;
+      return arabicRegex.test(number);
+    }
+    
+    function romanToArabic(number) {
+      var romanValues = {
+        M: 1000,
+        CM: 900,
+        D: 500,
+        CD: 400,
+        C: 100,
+        XC: 90,
+        L: 50,
+        XL: 40,
+        X: 10,
+        IX: 9,
+        V: 5,
+        IV: 4,
+        I: 1
+      };
+    
+      var arabicNumber = 0;
+      for (var i = 0; i < number.length; i++) {
+        var currentChar = number[i];
+        var nextChar = number[i + 1];
+    
+        if (romanValues[currentChar] < romanValues[nextChar]) {
+          arabicNumber += romanValues[nextChar] - romanValues[currentChar];
+          i++;
+        } else {
+          arabicNumber += romanValues[currentChar];
+        }
+      }
+    
+      return arabicNumber;
+    }
+    
+    function arabicToRoman(number) {
+      var romanValues = [
+        { value: 1000, symbol: 'M' },
+        { value: 900, symbol: 'CM' },
+        { value: 500, symbol: 'D' },
+        { value: 400, symbol: 'CD' },
+        { value: 100, symbol: 'C' },
+        { value: 90, symbol: 'XC' },
+        { value: 50, symbol: 'L' },
+        { value: 40, symbol: 'XL' },
+        { value: 10, symbol: 'X' },
+        { value: 9, symbol: 'IX' },
+        { value: 5, symbol: 'V' },
+        { value: 4, symbol: 'IV' },
+        { value: 1, symbol: 'I' }
+      ];
+    
+      var romanNumber = '';
+      for (var i = 0; i < romanValues.length; i++) {
+        while (number >= romanValues[i].value) {
+          romanNumber += romanValues[i].symbol;
+          number -= romanValues[i].value;
+        }
+      }
+    
+      return romanNumber;
+    }
+    
+  </script>
+</body>
+</html>

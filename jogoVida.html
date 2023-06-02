@@ -1,0 +1,134 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Jogo da Vida de Conway</title>
+    <style>
+        body{
+            font-family: Arial, sans-serif;
+            background: linear-gradient(-135deg,#ffa100,#ffbc00);
+        }
+        a{
+            color: black;
+           }
+
+        h1{
+           text-align:center;
+        }
+        /* Estilos CSS para o tabuleiro */
+        #board {
+            display: grid;
+            grid-template-columns: repeat(10, 1fr);
+            grid-template-rows: repeat(10, 1fr);
+            gap: 1px;
+            width: 100px;
+            margin-left: 475px;
+        }
+
+        .cell {
+            width: 30px;
+            height: 30px;
+            background-color: #ffffff;
+            border: 1px solid #000;
+        }
+    </style>
+</head>
+<body>
+    <div class="menu">
+        <a href="index.html">Conversor</a>
+          <a href="calculadora.html">Calculadora</a>
+          </div> 
+    <h1>Jogo da Vida</h1>
+    <div id="board"></div>
+
+    <script>
+        // Dimensões do tabuleiro
+        const width = 10;
+        const height = 10;
+
+        // Cria o tabuleiro
+        const board = [];
+        for (let i = 0; i < width; i++) {
+            board[i] = [];
+            for (let j = 0; j < height; j++) {
+                board[i][j] = false; // Define todas as células como mortas inicialmente
+            }
+        }
+
+        // Cria o tabuleiro visual na página
+        const boardContainer = document.getElementById("board");
+        for (let i = 0; i < width; i++) {
+            for (let j = 0; j < height; j++) {
+                const cell = document.createElement("div");
+                cell.className = "cell";
+                cell.dataset.row = i;
+                cell.dataset.col = j;
+                boardContainer.appendChild(cell);
+            }
+        }
+
+        // Adiciona o evento de clique em cada célula
+        const cells = document.getElementsByClassName("cell");
+        for (const cell of cells) {
+            cell.addEventListener("click", toggleCellState);
+        }
+
+        // Função para alternar o estado da célula (morta/viva)
+        function toggleCellState() {
+            const row = parseInt(this.dataset.row);
+            const col = parseInt(this.dataset.col);
+            board[row][col] = !board[row][col];
+            this.style.backgroundColor = board[row][col] ? "#000" : "#fff";
+        }
+
+        // Função para atualizar o tabuleiro a cada geração
+        function updateBoard() {
+            const newBoard = [];
+            for (let i = 0; i < width; i++) {
+                newBoard[i] = [];
+                for (let j = 0; j < height; j++) {
+                    const isAlive = board[i][j];
+                    const numNeighbors = countNeighbors(i, j);
+                    if (isAlive) {
+                        // Célula viva com menos de 2 ou mais de 3 vizinhos vivos morre
+                        newBoard[i][j] = numNeighbors === 2 || numNeighbors === 3;
+                    } else {
+                        // Célula morta com exatamente 3 vizinhos vivos se torna viva
+                        newBoard[i][j] = numNeighbors === 3;
+                    }
+                }
+            }
+            board.splice(0, board.length, ...newBoard);
+            updateBoardView();
+        }
+
+        // Função para contar o número de vizinhos vivos de uma célula
+        function countNeighbors(row, col) {
+            let count = 0;
+            for (let i = -1; i <= 1; i++) {
+                for (let j = -1; j <= 1; j++) {
+                    if (i === 0 && j === 0) continue; // Ignora a própria célula
+                    const neighborRow = (row + i + width) % width;
+                    const neighborCol = (col + j + height) % height;
+                    if (board[neighborRow][neighborCol]) {
+                        count++;
+                    }
+                }
+            }
+            return count;
+        }
+
+        // Função para atualizar a visualização do tabuleiro
+        function updateBoardView() {
+            for (let i = 0; i < width; i++) {
+                for (let j = 0; j < height; j++) {
+                    const cell = cells[i * height + j];
+                    cell.style.backgroundColor = board[i][j] ? "#000" : "#fff";
+                }
+            }
+        }
+
+        // Executa o jogo da vida em um loop
+        setInterval(updateBoard, 1000);
+    </script>
+</body>
+</html>
